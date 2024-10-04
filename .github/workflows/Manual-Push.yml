@@ -1,0 +1,43 @@
+name: Manually push changes to another environment
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: write # This is required for actions/checkout
+
+on:
+  workflow_dispatch:
+    deploy_to:
+      description: "Environment/branch to deploy to"
+      required: true
+      type: choice
+      options:
+        - staging
+        - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.target_environment }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensure all history is fetched to enable rebasing and merging
+
+      - name: Push to staging
+        if: ${{ github.event.inputs.deploy_to == 'staging' }}
+        run: |
+          git checkout develop
+          git rebase staging
+          git checkout staging
+          git merge --ff-only develop
+          git push
+
+      - name: Push to main
+        if: ${{ github.event.inputs.deploy_to == 'main' }}
+        run: |
+          git checkout staging
+          git rebase main
+          git checkout main
+          git merge --ff-only staging
+          git push
