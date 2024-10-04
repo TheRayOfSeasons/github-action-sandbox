@@ -4,3 +4,4 @@ function add(x, y) {
 
 console.log(add(1, 1));
 console.log(add(2, 2));
+console.log(add(3, 3));
