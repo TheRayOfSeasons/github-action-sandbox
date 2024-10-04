@@ -33,6 +33,8 @@ jobs:
 
       - name: Push to staging
         if: ${{ github.event.inputs.deploy_to == 'staging' }}
+        env:
+          PAT_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
           git fetch origin staging
           git checkout develop
@@ -43,6 +45,8 @@ jobs:
 
       - name: Push to main
         if: ${{ github.event.inputs.deploy_to == 'main' }}
+        env:
+          PAT_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
           git fetch origin main
           git checkout staging
