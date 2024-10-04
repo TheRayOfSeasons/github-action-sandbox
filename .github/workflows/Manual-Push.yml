@@ -19,7 +19,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.target_environment }}
+
     steps:
       - name: Test echo 
         run: echo ${{ secrets.PERSONAL_ACCESS_TOKEN }}
