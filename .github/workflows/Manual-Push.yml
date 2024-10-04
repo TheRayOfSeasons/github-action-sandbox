@@ -6,13 +6,15 @@ permissions:
 
 on:
   workflow_dispatch:
-    deploy_to:
-      description: "Environment/branch to deploy to"
-      required: true
-      type: choice
-      options:
-        - staging
-        - main
+    inputs:
+      deploy_to:
+        description: "Environment/branch to deploy to"
+        required: true
+        default: staging
+        type: choice
+        options:
+          - staging
+          - main
 
 jobs:
   deploy:
@@ -24,20 +26,27 @@ jobs:
         with:
           fetch-depth: 0  # Ensure all history is fetched to enable rebasing and merging
 
+      - name: Set up Git user
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+
       - name: Push to staging
         if: ${{ github.event.inputs.deploy_to == 'staging' }}
         run: |
+          git fetch origin staging
           git checkout develop
-          git rebase staging
-          git checkout staging
+          git rebase origin/staging
+          git checkout origin/staging
           git merge --ff-only develop
-          git push
+          git push origin HEAD:staging
 
       - name: Push to main
         if: ${{ github.event.inputs.deploy_to == 'main' }}
         run: |
+          git fetch origin main
           git checkout staging
-          git rebase main
-          git checkout main
+          git rebase origin/main
+          git checkout origin/main
           git merge --ff-only staging
-          git push
+          git push origin HEAD:main
