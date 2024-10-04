@@ -19,11 +19,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Test echo 
-        run: echo "a ${{ secrets.PERSONAL_ACCESS_TOKEN }} a"
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
