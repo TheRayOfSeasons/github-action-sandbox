@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Test echo 
-        run: echo ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: echo "a ${{ secrets.PERSONAL_ACCESS_TOKEN }} a"
 
       - name: Checkout repository
         uses: actions/checkout@v4
